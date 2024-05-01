@@ -21,7 +21,7 @@ func TestFixed(t *testing.T) {
 		ch := make(chan int, 1)
 		go func() {
 			result := fn()
-			ch <- result // block
+			ch <- result
 			exited.Store(true)
 		}()
 
