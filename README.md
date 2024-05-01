@@ -4,7 +4,7 @@
 - original repository: https://github.com/system-pclub/go-concurrency-bugs
 - try running [the broken tests](broken_test.go) and fixing them
 - compare [broken_test.go](broken_test.go) with [fixed_test.go](fixed_test.go) for solutions
-- compare the files
+- to run the tests for a particular example, e.g.: `go test -v -run "^TestFigure7.*" -count=1`
 
 # Original Article
 
