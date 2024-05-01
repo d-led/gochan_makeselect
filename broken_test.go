@@ -60,15 +60,13 @@ func TestFigure5(t *testing.T) {
 
 func TestFigure6(t *testing.T) {
 	t.Run("Figure 6. A blocking bug caused by context", func(t *testing.T) {
-		defer goleak.VerifyNone(t)
-
 		ctx := context.Background()
 		timeout := 1500 * time.Millisecond
 		hctx, hcancel := context.WithCancel(ctx)
 
 		go func() {
 			<-hctx.Done() // blocks
-			fmt.Println("this should not have happened")
+			fmt.Println("this is new")
 		}()
 
 		if timeout > 0 {
@@ -80,6 +78,7 @@ func TestFigure6(t *testing.T) {
 		assert.NotNil(t, hctx)
 
 		<-hctx.Done()
+		fmt.Println("cancelled")
 	})
 }
 

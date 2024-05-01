@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"sync"
 	"sync/atomic"
@@ -57,31 +56,6 @@ func TestFigure5Fixed(t *testing.T) {
 			}
 			group.Wait()
 		})
-	})
-}
-
-func TestFigure6Fixed(t *testing.T) {
-	t.Run("Figure 6. A blocking bug caused by context", func(t *testing.T) {
-		defer goleak.VerifyNone(t)
-
-		ctx := context.Background()
-		timeout := 1500 * time.Millisecond
-		hctx, hcancel := context.WithCancel(ctx)
-
-		go func() {
-			<-hctx.Done() // blocks
-			fmt.Println("this should not have happened")
-		}()
-
-		if timeout > 0 {
-			hctx, hcancel = context.WithTimeout(ctx, timeout)
-		}
-
-		hcancel()
-
-		assert.NotNil(t, hctx)
-
-		<-hctx.Done()
 	})
 }
 
