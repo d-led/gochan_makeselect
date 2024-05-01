@@ -122,6 +122,36 @@ func TestFigure7(t *testing.T) {
 	})
 }
 
+func TestFigure8(t *testing.T) {
+	t.Run("Figure 8. A data race caused by anonymous function.", func(t *testing.T) {
+		versionOf := func(i int) string { return fmt.Sprintf("v1.%d", i) }
+		start := 17
+		finish := 21
+		count := finish - start + 1
+		results := make(chan string, count)
+
+		for i := start; i <= finish; i++ { // write
+			go func() { /* Create a new goroutine */
+				// loop variable i captured by func
+				results <- versionOf(i) // read
+			}()
+		}
+
+		versions := []string{}
+		for v := range results {
+			versions = append(versions, v)
+			if len(versions) == count {
+				break
+			}
+		}
+		close(results)
+
+		for i := start; i <= finish; i++ {
+			assert.Contains(t, versions, versionOf(i))
+		}
+	})
+}
+
 func shouldNotTimeoutDelay(t *testing.T, delay time.Duration, f func()) {
 	timeout := time.After(delay)
 
