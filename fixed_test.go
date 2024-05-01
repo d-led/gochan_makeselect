@@ -8,10 +8,13 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/goleak"
 )
 
-func TestFixed(t *testing.T) {
+func TestFigure1Fixed(t *testing.T) {
 	t.Run("Figure 1. A blocking bug caused by channel.", func(t *testing.T) {
+		defer goleak.VerifyNone(t)
+
 		halfDelay := 250 * time.Millisecond
 		delay := 2 * halfDelay
 
@@ -36,6 +39,10 @@ func TestFixed(t *testing.T) {
 
 		assert.Truef(t, exited.Load(), "the goroutine is now stuck and leaked")
 	})
+}
+
+func TestFigure5Fixed(t *testing.T) {
+	defer goleak.VerifyNone(t)
 
 	t.Run("Figure 5. A blocking bug caused by WaitGroup.", func(t *testing.T) {
 		shouldNotTimeout(t, func() {
